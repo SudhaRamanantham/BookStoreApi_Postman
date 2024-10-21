@@ -1,0 +1,805 @@
+{
+	"info": {
+		"_postman_id": "4760699b-fe47-48bf-b17b-70449c2503ea",
+		"name": "Book Store API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33070466",
+		"_collection_link": "https://red-rocket-191119.postman.co/workspace/Motivators~08402326-9a03-43ce-8584-0168d3dc5e0a/collection/33070466-4760699b-fe47-48bf-b17b-70449c2503ea?action=share&source=collection_link&creator=33070466"
+	},
+	"item": [
+		{
+			"name": "Create account user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//get response body \"token\" value\r",
+							"resBodyData = pm.response.json();\r",
+							"userIdValue = resBodyData.userID;\r",
+							"\r",
+							"//to see in console\r",
+							"console.log(\"UserId value: \",userIdValue);\r",
+							"\r",
+							"//setting \"userID\" value in environment variable for other request use\r",
+							"pm.collectionVariables.set(\"UserId\", userIdValue);\r",
+							"\r",
+							"//status code validation\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"//status line validation\r",
+							"pm.test(\"Status line is Created\", function () {\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"\r",
+							"//response time validation\r",
+							"pm.test(\"Response time is less than 1000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"//header validation\r",
+							"pm.test(\"Header is Content-Type\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"//data validation\r",
+							"pm.test(\"response data validation\", function () {\r",
+							"    pm.expect(resBodyData.username).to.eql(\"ApiLearning273\");\r",
+							"    pm.expect(resBodyData.userID).to.eql(pm.collectionVariables.get(\"UserId\"));   \r",
+							"});\r",
+							"\r",
+							"//schema validation\r",
+							"const postSchema = {\r",
+							"  //\"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"userID\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"username\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"books\": {\r",
+							"      \"type\": \"array\",\r",
+							"      \"items\": {}\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"userID\",\r",
+							"    \"username\",\r",
+							"    \"books\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Response contains valid JSON data\", () => {\r",
+							"    pm.response.to.have.jsonSchema(postSchema);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"ApiLearning273\",\r\n  \"password\": \"Test@143\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURI}}/Account/v1/User",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"Account",
+						"v1",
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//get response body \"token\" value\r",
+							"resBodyData = pm.response.json();\r",
+							"tokenValue = resBodyData.token;\r",
+							"\r",
+							"//to see in console\r",
+							"console.log(\"Token value from generate token post request: \",tokenValue);\r",
+							"\r",
+							"//setting \"token\" value in environment variable for other request use\r",
+							"pm.collectionVariables.set(\"generatedToken\", tokenValue);\r",
+							"\r",
+							"//status code validation\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//status line validation\r",
+							"pm.test(\"Status line is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"//response time validation\r",
+							"pm.test(\"Response time is less than 1000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"//header validation\r",
+							"pm.test(\"Header is Content-Type\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"//data validation\r",
+							"pm.test(\"response data validation\", function () {\r",
+							"    pm.expect(resBodyData.result).to.eql(\"User authorized successfully.\");\r",
+							"    pm.expect(resBodyData.token).to.eql(pm.collectionVariables.get(\"generatedToken\"));   \r",
+							"});\r",
+							"\r",
+							"//schema validation\r",
+							"const postSchema = {\r",
+							"  //\"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"token\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"expires\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"status\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"result\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"token\",\r",
+							"    \"expires\",\r",
+							"    \"status\",\r",
+							"    \"result\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Response contains valid JSON data\", () => {\r",
+							"    pm.response.to.have.jsonSchema(postSchema);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// console.log(\"In post Generate token\")\r",
+							"// if(pm.environment.get(\"generatedToken\")!=null){\r",
+							"//     console.log(\"Token is already generated. So, this post request is skipping now.\")\r",
+							"//     pm.execution.skipRequest()\r",
+							"// }\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"ApiLearning273\",\r\n  \"password\": \"Test@143\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURI}}/Account/v1/GenerateToken",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"Account",
+						"v1",
+						"GenerateToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//status code validation\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//status line validation\r",
+							"pm.test(\"Status line is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"//response time validation\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// console.log(\"In post create account user\")\r",
+							"// if(pm.environment.get(\"generatedToken\")!=null){\r",
+							"//     pm.execution.skipRequest()\r",
+							"// }\r",
+							"\r",
+							"// //to add headers in pre script\r",
+							"\r",
+							"// //to get column name \"testScenario\" from excel \r",
+							"// //let scenario = pm.iteration.get(\"testScenario\") \r",
+							"\r",
+							"// let scenario = pm.environment.get(\"generatedToken\")\r",
+							"// if(scenario != \"generatedToken\"){\r",
+							"//     console.log(\"executing this request\")\r",
+							"//     if(scenario == \"NoAuth\"){\r",
+							"//         pm.request.headers.add(\r",
+							"//             {\r",
+							"//                 key : \"Authorization\",\r",
+							"//                 value : \"Bearer ${generatedToken}\"//{token}\"\r",
+							"//             }\r",
+							"//         )\r",
+							"//     }\r",
+							"// }"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"ApiLearning273\",\r\n  \"password\": \"Test@143\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURI}}/Account/v1/Authorized",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"Account",
+						"v1",
+						"Authorized"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check created user details by userID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//status code validation\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//status line validation\r",
+							"pm.test(\"Status line is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"//response time validation\r",
+							"pm.test(\"Response time is less than 1000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"// //header validation\r",
+							"// pm.test(\"Header is Content-Type\", function () {\r",
+							"//     pm.response.to.have.header(\"Content-Type\");\r",
+							"// });\r",
+							"\r",
+							"//to get response body data\r",
+							"resBodyData = pm.response.json();\r",
+							"\r",
+							"//data validation\r",
+							"pm.test(\"response data validation\", function () {\r",
+							"    pm.expect(resBodyData.userId).to.eql(pm.collectionVariables.get(\"UserId\"));\r",
+							"    pm.expect(resBodyData.username).to.eql(\"ApiLearning273\");   \r",
+							"});\r",
+							"\r",
+							"//schema validation\r",
+							"const postSchema = {\r",
+							"  //\"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"userId\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"username\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"books\": {\r",
+							"      \"type\": \"array\",\r",
+							"      \"items\": [\r",
+							"        {\r",
+							"          \"type\": \"object\",\r",
+							"          \"properties\": {\r",
+							"            \"isbn\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"title\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"subTitle\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"author\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"publish_date\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"publisher\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"pages\": {\r",
+							"              \"type\": \"integer\"\r",
+							"            },\r",
+							"            \"description\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"website\": {\r",
+							"              \"type\": \"string\"\r",
+							"            }\r",
+							"          },\r",
+							"          \"required\": [\r",
+							"            \"isbn\",\r",
+							"            \"title\",\r",
+							"            \"subTitle\",\r",
+							"            \"author\",\r",
+							"            \"publish_date\",\r",
+							"            \"publisher\",\r",
+							"            \"pages\",\r",
+							"            \"description\",\r",
+							"            \"website\"\r",
+							"          ]\r",
+							"        }\r",
+							"      ]\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"userId\",\r",
+							"    \"username\",\r",
+							"    \"books\"\r",
+							"  ]\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Response contains valid JSON data\", () => {\r",
+							"    pm.response.to.have.jsonSchema(postSchema);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURI}}/Account/v1/User/{{UserId}}",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"Account",
+						"v1",
+						"User",
+						"{{UserId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Book store books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//get isbn value from response\r",
+							"resBodyData = pm.response.json();\r",
+							"\r",
+							"isbnValue1 = resBodyData.books[0].isbn;\r",
+							"console.log(\"ISBN value1: \",isbnValue1);\r",
+							"pm.collectionVariables.set(\"Isbn1\",isbnValue1);\r",
+							"\r",
+							"isbnValue2 = resBodyData.books[1].isbn;\r",
+							"console.log(\"ISBN isbnValue2: \",isbnValue2);\r",
+							"pm.collectionVariables.set(\"Isbn2\",isbnValue2);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Books",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create book store book for user with Isbn",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"{{UserId}}\",\r\n  \"collectionOfIsbns\": [\r\n    {\r\n      \"isbn\": \"{{Isbn1}}\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Books",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check book details by Isbn1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Book?ISBN={{Isbn1}}",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Book"
+					],
+					"query": [
+						{
+							"key": "ISBN",
+							"value": "{{Isbn1}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check book details by Isbn2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Book?ISBN={{Isbn2}}",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Book"
+					],
+					"query": [
+						{
+							"key": "ISBN",
+							"value": "{{Isbn2}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update book with another Isbn",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"{{UserId}}\",\r\n  \"isbn\": \"{{Isbn2}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Books/{{Isbn1}}",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Books",
+						"{{Isbn1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete created book",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"isbn\": \"{{Isbn2}}\",\r\n  \"userId\": \"{{UserId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Book",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete books",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURI}}/BookStore/v1/Books?UserId={{UserId}}",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"BookStore",
+						"v1",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "UserId",
+							"value": "{{UserId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user account by userId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{generatedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURI}}/Account/v1/User/{{UserId}}",
+					"host": [
+						"{{BaseURI}}"
+					],
+					"path": [
+						"Account",
+						"v1",
+						"User",
+						"{{UserId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "UserId",
+			"value": ""
+		},
+		{
+			"key": "generatedToken",
+			"value": ""
+		},
+		{
+			"key": "Isbn1",
+			"value": ""
+		},
+		{
+			"key": "Isbn2",
+			"value": ""
+		}
+	]
+}
